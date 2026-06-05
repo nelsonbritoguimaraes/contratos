@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-@Profile("local")
+@Profile("local", "prod")
 class StubImapEmailConnector : ImapEmailConnector {
     override fun fetchUnread(tenantId: UUID): List<IncomingEmailMessage> = emptyList()
 

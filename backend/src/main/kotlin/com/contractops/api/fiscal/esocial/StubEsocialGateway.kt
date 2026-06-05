@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import java.util.UUID
 
 @Component
-@Profile("local")
+@Profile("local", "prod")
 class StubEsocialGateway : EsocialGateway {
     override fun transmit(eventType: String, xmlPayload: String): FiscalTransmitResult {
         val protocol = "STUB-${eventType}-${UUID.randomUUID().toString().take(12).uppercase()}"

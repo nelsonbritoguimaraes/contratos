@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
  * Stub para Anthropic (Claude).
  */
 @Component
-@Profile("local")
+@Profile("local", "prod")
 class AnthropicProvider : AiProvider {
 
     override fun getName() = "anthropic"

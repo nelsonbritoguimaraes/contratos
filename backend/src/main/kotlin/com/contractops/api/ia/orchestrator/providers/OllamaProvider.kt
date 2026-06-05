@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
  * Em produção faria chamadas reais para localhost:11434.
  */
 @Component
-@Profile("local")
+@Profile("local", "prod")
 class OllamaProvider : AiProvider {
 
     override fun getName() = "ollama"

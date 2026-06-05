@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 /** INTEGRATION_STUB: SPEC §23 — OpenAI real via SDK/chave não configurado. */
 @Component
-@Profile("local")
+@Profile("local", "prod")
 class OpenAiProvider : AiProvider {
 
     override fun getName() = "openai"

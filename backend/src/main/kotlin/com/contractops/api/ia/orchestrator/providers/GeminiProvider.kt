@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
  * Stub para Google Gemini.
  */
 @Component
-@Profile("local")
+@Profile("local", "prod")
 class GeminiProvider : AiProvider {
 
     override fun getName() = "gemini"

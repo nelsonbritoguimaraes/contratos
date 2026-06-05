@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
  * Futuramente integrado com Tika, Google Document AI, ou Agente de IA.
  */
 @Service
-@Profile("local")
+@Profile("local", "prod")
 class OcrService {
 
     fun extractText(filePath: String, mimeType: String?): String {
