@@ -9,6 +9,10 @@ FROM gradle:8.14.4-jdk21 AS build
 USER root
 WORKDIR /app
 
+# build.gradle.kts redirects the build dir (to dodge OneDrive locks on Windows).
+# Pin it to /app/build inside the container so the runtime stage can find the jar.
+ENV CONTRACTOPS_BUILD_DIR=/app/build
+
 # Copy build files first (better layer caching)
 COPY build.gradle.kts settings.gradle.kts ./
 
