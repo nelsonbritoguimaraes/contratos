@@ -38,19 +38,19 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO bidding_lots (id, tenant_id, bidding_id, numero_lote, descricao, quantitativo_postos, valor_mensal, valor_global, prazo_meses)
 VALUES
 -- Lotes da Licitação 1 (Curitiba)
-('l1a1a1a1-l1a1-l1a1-l1a1-l1a1a1a1a1a1', '11111111-1111-1111-1111-111111111111', 'b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1',
+('d1a1a1a1-d1a1-d1a1-d1a1-d1a1a1a1a1a1', '11111111-1111-1111-1111-111111111111', 'b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1',
  'Lote 01', 'Vigilância - Sede da Prefeitura e secretarias centrais', 8, 125000.00, 3000000.00, 24),
-('l1a1a1a2-l1a1-l1a1-l1a1-l1a1a1a1a1a2', '11111111-1111-1111-1111-111111111111', 'b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1',
+('d1a1a1a2-d1a1-d1a1-d1a1-d1a1a1a1a1a2', '11111111-1111-1111-1111-111111111111', 'b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1',
  'Lote 02', 'Vigilância - Unidades de saúde e escolas', 4, 62450.00, 1498800.00, 24),
 
 -- Lotes da Licitação 2 (Paraná)
-('l2b2b2b1-l2b2-l2b2-l2b2-l2b2b2b2b2b1', '11111111-1111-1111-1111-111111111111', 'b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2',
+('d2b2b2b1-d2b2-d2b2-d2b2-d2b2b2b2b2b1', '11111111-1111-1111-1111-111111111111', 'b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2',
  'Lote Único', 'Vigilância patrimonial - 12 unidades administrativas do interior', 8, 94500.00, 1134000.00, 12),
 
 -- Lotes da Licitação 3 (Cascavel)
-('l3c3c3c1-l3c3-l3c3-l3c3-l3c3c3c3c3c1', '11111111-1111-1111-1111-111111111111', 'b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3',
+('d3c3c3c1-d3c3-d3c3-d3c3-d3c3c3c3c3c1', '11111111-1111-1111-1111-111111111111', 'b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3',
  'Lote 01', 'Limpeza - Prédios públicos centrais', 10, 45000.00, 1080000.00, 24),
-('l3c3c3c2-l3c3-l3c3-l3c3-l3c3c3c3c3c2', '11111111-1111-1111-1111-111111111111', 'b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3',
+('d3c3c3c2-d3c3-d3c3-d3c3-d3c3c3c3c3c2', '11111111-1111-1111-1111-111111111111', 'b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3',
  'Lote 02', 'Limpeza - Escolas e UBS', 5, 22200.00, 532800.00, 24)
 ON CONFLICT (id) DO NOTHING;
 
@@ -59,15 +59,15 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================
 INSERT INTO winning_spreadsheets (id, tenant_id, bidding_id, contract_id, versao, arquivo_nome, is_vencedora, memoria_calculo)
 VALUES
-('w1w1w1w1-w1w1-w1w1-w1w1-w1w1w1w1w1w1', '11111111-1111-1111-1111-111111111111', 'b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1',
+('e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1', '11111111-1111-1111-1111-111111111111', 'b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1',
  'c1c1c1c1-c1c1-c1c1-c1c1-c1c1c1c1c1c1', 1, 'planilha_vencedora_pe045_2024_v1.xlsx', true,
  'Memória de cálculo: 12 postos vigilante diurno + 4 noturno. Composição: salário + encargos + uniformes + equipamentos.'),
 
-('w2w2w2w2-w2w2-w2w2-w2w2-w2w2w2w2w2w2', '11111111-1111-1111-1111-111111111111', 'b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2',
+('e2e2e2e2-e2e2-e2e2-e2e2-e2e2e2e2e2e2', '11111111-1111-1111-1111-111111111111', 'b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2',
  'c2c2c2c2-c2c2-c2c2-c2c2-c2c2c2c2c2c2', 1, 'planilha_vencedora_pe112_2024_v1.xlsx', true,
  '8 postos de vigilante 12x36. Valor mensal por posto R$ 11.812,50 (salário + 80% encargos + benefícios).'),
 
-('w3w3w3w3-w3w3-w3w3-w3w3-w3w3w3w3w3w3', '11111111-1111-1111-1111-111111111111', 'b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3',
+('e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3', '11111111-1111-1111-1111-111111111111', 'b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3',
  'c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3', 1, 'planilha_vencedora_pe078_2025_v1.xlsx', true,
  '15 postos de auxiliar de limpeza + 1 supervisor. Turnos: 6h diárias.')
 ON CONFLICT (id) DO NOTHING;
@@ -78,16 +78,16 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO contract_lots (id, tenant_id, contract_id, bidding_lot_id, numero_lote, descricao, quantitativo_postos, valor_mensal, valor_global)
 VALUES
 ('cl1cl1c1-cl1c-cl1c-cl1c-cl1cl1cl1c1c1', '11111111-1111-1111-1111-111111111111', 'c1c1c1c1-c1c1-c1c1-c1c1-c1c1c1c1c1c1',
- 'l1a1a1a1-l1a1-l1a1-l1a1-l1a1a1a1a1a1', 'Lote 01', 'Vigilância - Sede da Prefeitura e secretarias centrais (Contrato 45/2024)', 8, 125000.00, 3000000.00),
+ 'd1a1a1a1-d1a1-d1a1-d1a1-d1a1a1a1a1a1', 'Lote 01', 'Vigilância - Sede da Prefeitura e secretarias centrais (Contrato 45/2024)', 8, 125000.00, 3000000.00),
 
 ('cl1cl1c2-cl1c-cl1c-cl1c-cl1cl1cl1c2c2', '11111111-1111-1111-1111-111111111111', 'c1c1c1c1-c1c1-c1c1-c1c1-c1c1c1c1c1c1',
- 'l1a1a1a2-l1a1-l1a1-l1a1-l1a1a1a1a1a2', 'Lote 02', 'Vigilância - Unidades de saúde e escolas (Contrato 45/2024)', 4, 62450.00, 1498800.00),
+ 'd1a1a1a2-d1a1-d1a1-d1a1-d1a1a1a1a1a2', 'Lote 02', 'Vigilância - Unidades de saúde e escolas (Contrato 45/2024)', 4, 62450.00, 1498800.00),
 
 ('cl2cl2c1-cl2c-cl2c-cl2c-cl2cl2cl2c1c1', '11111111-1111-1111-1111-111111111111', 'c2c2c2c2-c2c2-c2c2-c2c2-c2c2c2c2c2c2',
- 'l2b2b2b1-l2b2-l2b2-l2b2-l2b2b2b2b2b1', 'Lote Único', 'Vigilância patrimonial - 12 unidades administrativas do interior', 8, 94500.00, 1134000.00),
+ 'd2b2b2b1-d2b2-d2b2-d2b2-d2b2b2b2b2b1', 'Lote Único', 'Vigilância patrimonial - 12 unidades administrativas do interior', 8, 94500.00, 1134000.00),
 
 ('cl3cl3c1-cl3c-cl3c-cl3c-cl3cl3cl3c1c1', '11111111-1111-1111-1111-111111111111', 'c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3',
- 'l3c3c3c1-l3c3-l3c3-l3c3-l3c3c3c3c3c1', 'Lote 01', 'Limpeza - Prédios públicos centrais (Contrato 78/2025)', 10, 45000.00, 1080000.00)
+ 'd3c3c3c1-d3c3-d3c3-d3c3-d3c3c3c3c3c1', 'Lote 01', 'Limpeza - Prédios públicos centrais (Contrato 78/2025)', 10, 45000.00, 1080000.00)
 ON CONFLICT (id) DO NOTHING;
 
 -- Atualiza contagem de postos nos contratos (para consistência com qtd_postos_contratados)
