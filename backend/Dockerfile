@@ -1,25 +1,25 @@
 # ContractOps AI — Production Backend Dockerfile
 # Multi-stage build for smaller final image
 
-FROM eclipse-temurin:21-jdk AS build
+# Use the official Gradle image so we don't depend on the committed
+# gradle-wrapper.jar (which is fragile through Git autocrlf / CI checkout
+# and was causing "Could not find or load main class GradleWrapperMain").
+FROM gradle:8.14.4-jdk21 AS build
 
+USER root
 WORKDIR /app
 
-# Copy Gradle wrapper and build files first (better layer caching)
-COPY gradlew gradlew.bat build.gradle.kts settings.gradle.kts ./
-COPY gradle ./gradle
-
-# Ensure gradlew is executable (Git on Windows may lose +x permission)
-RUN chmod +x gradlew
+# Copy build files first (better layer caching)
+COPY build.gradle.kts settings.gradle.kts ./
 
 # Download dependencies (cached layer)
-RUN ./gradlew dependencies --no-daemon || true
+RUN gradle dependencies --no-daemon || true
 
 # Copy source
 COPY src ./src
 
 # Build the application
-RUN ./gradlew clean bootJar --no-daemon -x test
+RUN gradle clean bootJar --no-daemon -x test
 
 # ==================== Runtime Stage ====================
 FROM eclipse-temurin:21-jre-alpine
