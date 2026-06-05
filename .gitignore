@@ -19,8 +19,7 @@ frontend/.vite/
 # Gradle / Backend
 backend/.gradle/
 backend/build/
-backend/gradle/wrapper/gradle-wrapper.jar
-backend/gradle/wrapper/gradle-wrapper.properties
+!backend/gradle/wrapper/gradle-wrapper.jar
 !backend/gradle/wrapper/gradle-wrapper.properties
 
 # Java / Kotlin
