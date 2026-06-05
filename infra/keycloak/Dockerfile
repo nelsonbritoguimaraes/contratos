@@ -3,9 +3,13 @@ FROM quay.io/keycloak/keycloak:26.0
 # Production mode with edge proxy (TLS handled by Traefik)
 ENV KC_PROXY=edge
 ENV KC_HEALTH_ENABLED=true
+ENV KC_DB=postgres
+ENV KC_DB_URL=jdbc:postgresql://std8ft2txgni1hswnvoetrt5:5432/appdb
+ENV KC_DB_USERNAME=appuser
+ENV KC_DB_PASSWORD=BSYawOw2EBCamG5q21II2InEMcFs5R6hxVlZ1iDqv6si3F5m6VESzvpfM6sdhJmh
 
-# Database config via env vars (injected by Coolify)
-# KC_DB, KC_DB_URL, KC_DB_USERNAME, KC_DB_PASSWORD
+# Build optimized Keycloak with DB config baked in
+RUN /opt/keycloak/bin/kc.sh build
 
 EXPOSE 8080
 
