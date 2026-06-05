@@ -1,0 +1,89 @@
+# ContractOps AI — Production Profile
+# Activate with: SPRING_PROFILES_ACTIVE=prod
+
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: contractops-api
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://postgres:5432/contractops}
+    username: ${DB_USER:contractops}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate.format_sql: false
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    clean-disabled: true
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8080/realms/contractops}
+
+# Production-grade logging
+logging:
+  level:
+    root: INFO
+    com.contractops: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+# Multi-tenant security + fiscal produção
+contractops:
+  security:
+    permit-all-api: false
+    jwt:
+      allow-demo-fallback: false
+  fiscal:
+    mode: ${FISCAL_MODE:production}
+    esocial:
+      tp-amb: ${FISCAL_ESOCIAL_TP_AMB:1}
+      employer-cnpj: ${FISCAL_EMPLOYER_CNPJ}
+      transmit-url: ${FISCAL_ESOCIAL_TRANSMIT_URL:https://webservices.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc}
+      certificate-path: ${FISCAL_ESOCIAL_CERT_PATH}
+      certificate-password: ${FISCAL_ESOCIAL_CERT_PASSWORD}
+    nfse:
+      municipio-ibge: ${FISCAL_NFSE_MUNICIPIO_IBGE}
+      emit-url: ${FISCAL_NFSE_EMIT_URL:https://sefin.nfse.gov.br/SefinNacional/nfse}
+      prestador-cnpj: ${FISCAL_NFSE_PRESTADOR_CNPJ}
+      certificate-path: ${FISCAL_NFSE_CERT_PATH}
+      certificate-password: ${FISCAL_NFSE_CERT_PASSWORD}
+    sped:
+      layout-version: ${FISCAL_SPED_LAYOUT_VERSION:9.0.0}
+      company-cnpj: ${FISCAL_EMPLOYER_CNPJ}

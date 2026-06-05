@@ -1,0 +1,110 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: contractops-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/contractops
+    username: contractops
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate          # Flyway é o dono do schema
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    clean-disabled: true          # Nunca limpar em produção
+
+  # Keycloak Resource Server (ativado)
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/contractops
+
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USER:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# ContractOps AI
+contractops:
+  security:
+    permit-all-api: ${CONTRACTOPS_PERMIT_ALL_API:false}
+  fiscal:
+    # stub | sandbox | production
+    mode: sandbox
+    esocial:
+      tp-amb: 2
+      employer-cnpj: ${EMPLOYER_CNPJ:}
+      transmit-url: "https://webservices.producaorestrita.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc"
+      # Certificado A1/A3 ICP-Brasil (.pfx) — obrigatório em production
+      # certificate-path: ${ESOCIAL_CERT_PATH:/path/to/certificado.pfx}
+      # certificate-password: ${ESOCIAL_CERT_PASSWORD:secret}
+    nfse:
+      municipio-ibge: "3550308"
+      emit-url: "https://sefin.nfse.gov.br/SefinNacional/nfse"
+      prestador-cnpj: ${EMPLOYER_CNPJ:}
+    sped:
+      layout-version: "9.0.0"
+      company-cnpj: ${EMPLOYER_CNPJ:}
+  obligations:
+    mode: sandbox
+    fgts:
+      api-url: "https://api.fgtsdigital.serpro.gov.br/v1"
+    dctfweb:
+      transmit-url: "https://www.esocial.gov.br/webservices/empregador/dctfweb"
+  openfinance:
+    enabled: true
+    webhook-secret: ${OPENFINANCE_WEBHOOK_SECRET:}
+    authorization-base-url: ${OPENFINANCE_AUTH_URL:https://openfinance.sandbox.example}
+    consent-path: /consent/{consentId}
+    institution-query-param: institution
+    tenant-query-param: tenant
+  nfs-workflow:
+    auto-start-on-emit: true
+    auto-email-on-emit: true
+    orgao-email-default: "faturamento@orgao.gov.br"
+  # Habilitar: CONTRACTOPS_TEMPORAL_ENABLED=true + Temporal em localhost:7233 (docker compose up temporal)
+  temporal:
+    enabled: ${CONTRACTOPS_TEMPORAL_ENABLED:false}
+    target: ${CONTRACTOPS_TEMPORAL_TARGET:localhost:7233}
+    namespace: default
+    task-queue: contractops-finance-nfs
+  bidding:
+    upload-dir: ${CONTRACTOPS_BIDDING_UPLOAD_DIR:uploads/bidding}
+  ai:
+    mode: ${AI_MODE:sandbox}
+    opensearch:
+      enabled: ${OPENSEARCH_ENABLED:false}
+      host: ${OPENSEARCH_HOST:http://localhost:9200}
+      index: contractops-rag
+  kafka:
+    enabled: ${KAFKA_ENABLED:false}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    topic: contractops.domain-events
+
+# Produção: CONTRACTOPS_PERMIT_ALL_API=false + Keycloak issuer-uri

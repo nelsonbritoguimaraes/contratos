@@ -1,0 +1,145 @@
+# ContractOps AI — Production Docker Compose
+# Usage:
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Important:
+# - Set strong passwords via environment variables or .env file
+# - Use a reverse proxy (Traefik / Nginx Proxy Manager) in front for HTTPS
+# - Consider using managed Postgres in real production instead of this container
+
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: contractops-postgres-prod
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-contractops}
+      POSTGRES_USER: ${POSTGRES_USER:-contractops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - contractops_pgdata_prod:/var/lib/postgresql/data
+      - ./infra/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-contractops}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - contractops-prod
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  redis:
+    image: redis:7-alpine
+    container_name: contractops-redis-prod
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+    volumes:
+      - contractops_redisdata_prod:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-}", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - contractops-prod
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  # Keycloak (consider using managed auth in real prod)
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: contractops-keycloak-prod
+    restart: unless-stopped
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?KEYCLOAK_ADMIN_PASSWORD is required}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-contractops}
+      KC_DB_USERNAME: ${POSTGRES_USER:-contractops}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HEALTH_ENABLED: "true"
+      KC_PROXY: edge
+    command: start --optimized
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - contractops-prod
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: contractops-backend:latest
+    container_name: contractops-backend-prod
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-contractops}
+      DB_USER: ${POSTGRES_USER:-contractops}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_ISSUER_URI: ${KEYCLOAK_ISSUER_URI:-http://keycloak:8080/realms/contractops}
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - contractops-prod
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  # ==================== Frontend (Production) ====================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: contractops-frontend:latest
+    container_name: contractops-frontend-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"   # Change this port if you want to run behind a reverse proxy (e.g. 8082:80)
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - contractops-prod
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+volumes:
+  contractops_pgdata_prod:
+  contractops_redisdata_prod:
+
+networks:
+  contractops-prod:
+    driver: bridge

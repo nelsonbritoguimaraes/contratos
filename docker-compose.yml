@@ -1,0 +1,150 @@
+# ContractOps AI — Docker Compose (Scaffold v0.0.1)
+# Stack de desenvolvimento local alinhada à SPEC v1.0
+#
+# Serviços:
+# - postgres: banco principal (com seed demo de tenants/empresas/contratos/postos)
+# - redis: cache e filas futuras
+# - keycloak: autenticação / SSO (stub para RBAC/ABAC futuro)
+#
+# Uso:
+#   docker compose up -d
+#   docker compose down
+
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: contractops-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: contractops
+      POSTGRES_USER: contractops
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-contractops_dev_2026}
+    ports:
+      - "5432:5432"
+    volumes:
+      - contractops_pgdata:/var/lib/postgresql/data
+      - ./infra/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U contractops -d contractops"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - contractops-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: contractops-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - contractops_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - contractops-net
+
+  temporal:
+    image: temporalio/temporal:latest
+    container_name: contractops-temporal
+    restart: unless-stopped
+    command: ["server", "start-dev", "--ip", "0.0.0.0"]
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    networks:
+      - contractops-net
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: contractops-keycloak
+    restart: unless-stopped
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-admin123}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/contractops
+      KC_DB_USERNAME: contractops
+      KC_DB_PASSWORD: contractops_dev_2026
+      KC_HEALTH_ENABLED: "true"
+    ports:
+      - "8081:8080"
+    command: start-dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # Futuro: importar realm customizado com clients, roles e groups por tenant
+      # - ./infra/keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro
+    networks:
+      - contractops-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ==================== Backend (Kotlin/Spring Boot) ====================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: contractops-backend:dev
+    container_name: contractops-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-local}
+      DB_URL: jdbc:postgresql://postgres:5432/contractops
+      DB_USER: contractops
+      DB_PASSWORD: contractops_dev_2026
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/contractops
+      FISCAL_MODE: ${FISCAL_MODE:-production}
+      FISCAL_ESOCIAL_CERT_PATH: ${FISCAL_ESOCIAL_CERT_PATH:-/config/certs/esocial.pfx}
+      FISCAL_NFSE_CERT_PATH: ${FISCAL_NFSE_CERT_PATH:-/config/certs/nfse.pfx}
+      CONTRACTOPS_TEMPORAL_ENABLED: ${CONTRACTOPS_TEMPORAL_ENABLED:-false}
+      CONTRACTOPS_TEMPORAL_TARGET: temporal:7233
+    volumes:
+      - ./config/certs:/config/certs:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+      temporal:
+        condition: service_started
+    networks:
+      - contractops-net
+    # For local dev, you usually run backend outside Docker with ./gradlew bootRun
+    # This service is useful for full containerized testing.
+
+  # ==================== Frontend (Vite + React - Dev mode with hot reload) ====================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile  # Uses production build by default
+    image: contractops-frontend:dev
+    container_name: contractops-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"   # Exposes on 5173 to match Vite default
+    depends_on:
+      - backend
+    networks:
+      - contractops-net
+    # Note: For real development with hot-reload, run `npm run dev` locally instead of this container.
+
+volumes:
+  contractops_pgdata:
+  contractops_redisdata:
+
+networks:
+  contractops-net:
+    driver: bridge

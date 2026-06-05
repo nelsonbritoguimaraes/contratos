@@ -1,0 +1,50 @@
+{
+  "name": "contractops-ai-web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "ContractOps AI — Frontend React (Scaffold v0.0.1) | Material Design 3 + AG Grid",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@hookform/resolvers": "^5.4.0",
+    "@mui/icons-material": "^5.15.20",
+    "@mui/material": "^5.15.20",
+    "@mui/x-date-pickers": "^7.6.2",
+    "@tanstack/react-query": "^5.51.0",
+    "ag-grid-community": "^31.3.4",
+    "ag-grid-enterprise": "^31.3.4",
+    "ag-grid-react": "^31.3.4",
+    "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "lucide-react": "^0.408.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.0",
+    "react-router-dom": "^6.23.1",
+    "recharts": "^2.12.7",
+    "sonner": "^1.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.13"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

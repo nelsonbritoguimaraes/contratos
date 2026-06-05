@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find 'C:/Users/nelso/OneDrive/Área de Trabalho/Contratos/frontend/src/api' -name *.ts -type f)",
+      "Bash(find . -type f -name *.java -o -name *.js -o -name *.ts -o -name *.tsx -o -name *.vue -o -name *.jsx -o -name *.properties -o -name *.yml -o -name *.yaml -o -name *.xml -o -name *.gradle -o -name *.json -o -name *.css -o -name *.scss)",
+      "Bash(find ./backend/src -type f -name *.java -o -name *.properties -o -name *.yml -o -name *.sql)",
+      "Bash(find ./backend/src -type f \\\\\\(-name *.java -o -name *.kt \\\\\\))",
+      "Bash(find ./frontend/src -type f \\\\\\(-name *.ts -o -name *.tsx -o -name *.js -o -name *.css \\\\\\))",
+      "Bash(./gradlew compileKotlin)",
+      "Bash(npx tsc:*)",
+      "Bash(ls:*)",
+      "Bash(npx vite:*)",
+      "Bash(bash gradlew:*)",
+      "Bash(java:*)",
+      "Bash(jar tf:*)",
+      "Bash(./gradlew --version)",
+      "Bash(./gradlew.bat compileKotlin)",
+      "Read(//c/Usersnelso/OneDrive/Área de Trabalho/**)",
+      "Bash(find 'C:/Users/nelso/OneDrive/Área de Trabalho/Contratos/frontend' -type f -not -path */node_modules/* -not -path */dist/*)",
+      "Bash(find '/c/Users/nelso/OneDrive/Área de Trabalho/Contratos/backend/src' -name *.kt -type f)"
+    ]
+  }
+}

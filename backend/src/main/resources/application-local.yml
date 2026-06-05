@@ -1,0 +1,25 @@
+# Perfil local com integração fiscal em produção (certificados em config/certs/)
+# Ative: SPRING_PROFILES_ACTIVE=local
+# Variáveis: config/fiscal.env (copie de config/fiscal.env.example)
+
+contractops:
+  fiscal:
+    mode: ${FISCAL_MODE:production}
+    esocial:
+      tp-amb: ${FISCAL_ESOCIAL_TP_AMB:2}
+      employer-cnpj: ${FISCAL_EMPLOYER_CNPJ:00000000000000}
+      transmit-url: ${FISCAL_ESOCIAL_TRANSMIT_URL:https://webservices.producaorestrita.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc}
+      certificate-path: ${FISCAL_ESOCIAL_CERT_PATH:}
+      certificate-password: ${FISCAL_ESOCIAL_CERT_PASSWORD:}
+    nfse:
+      municipio-ibge: ${FISCAL_NFSE_MUNICIPIO_IBGE:3550308}
+      emit-url: ${FISCAL_NFSE_EMIT_URL:https://sefin.nfse.gov.br/SefinNacional/nfse}
+      prestador-cnpj: ${FISCAL_NFSE_PRESTADOR_CNPJ:00000000000000}
+      certificate-path: ${FISCAL_NFSE_CERT_PATH:}
+      certificate-password: ${FISCAL_NFSE_CERT_PASSWORD:}
+    sped:
+      layout-version: ${FISCAL_SPED_LAYOUT_VERSION:9.0.0}
+      company-cnpj: ${FISCAL_EMPLOYER_CNPJ:00000000000000}
+  temporal:
+    enabled: ${CONTRACTOPS_TEMPORAL_ENABLED:true}
+    target: ${CONTRACTOPS_TEMPORAL_TARGET:localhost:7233}

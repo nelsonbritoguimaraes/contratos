@@ -1,0 +1,7 @@
+package com.contractops.api.financeiro.repository
+
+import com.contractops.api.financeiro.domain.ConciliacaoBancaria
+import org.springframework.data.jpa.repository.JpaRepository
+import java.util.*
+
+interface ConciliacaoBancariaRepository : JpaRepository<ConciliacaoBancaria, UUID>

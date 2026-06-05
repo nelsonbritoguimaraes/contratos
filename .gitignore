@@ -1,0 +1,58 @@
+# ContractOps AI — .gitignore (Scaffold)
+
+# IDE / Editors
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.log
+
+# Gradle / Backend
+backend/.gradle/
+backend/build/
+backend/gradle/wrapper/gradle-wrapper.jar
+backend/gradle/wrapper/gradle-wrapper.properties
+!backend/gradle/wrapper/gradle-wrapper.properties
+
+# Java / Kotlin
+*.class
+*.jar
+*.war
+
+# Docker volumes
+contractops_pgdata/
+contractops_redisdata/
+
+# Environment
+.env
+.env.local
+config/fiscal.env
+config/certs/*.pfx
+config/certs/*.p12
+config/certs/*.pem
+!config/certs/.gitkeep
+!config/certs/README.md
+frontend/.env
+
+# AG Grid Enterprise license (nunca commitar a chave real)
+ag-grid-license.txt
+
+# Temporary / generated
+*.tmp
+logs/
+out/
+target/
+
+# Python (futuro Clock Bridge Agent / IA workers)
+__pycache__/
+*.py[cod]
+.venv/
