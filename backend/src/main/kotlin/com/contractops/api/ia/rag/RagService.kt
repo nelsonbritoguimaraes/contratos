@@ -9,6 +9,7 @@ import com.contractops.api.ia.repository.RagIndexDocumentRepository
 import com.contractops.api.measurement.service.MeasurementService
 import com.contractops.api.rh.service.PayslipService
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
@@ -24,7 +25,7 @@ class RagService(
     private val contractService: ContractService?,
     private val cctService: CctService?,
     private val documentService: DocumentService?,
-    private val measurementService: MeasurementService?,
+    @Lazy private val measurementService: MeasurementService?,
     private val payslipService: PayslipService?
 ) {
     private val log = LoggerFactory.getLogger(javaClass)

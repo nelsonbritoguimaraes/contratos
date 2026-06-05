@@ -5,6 +5,7 @@ import com.contractops.api.contabilidade.service.ContabilidadeService
 import com.contractops.api.financeiro.service.FinanceiroService
 import com.contractops.api.rh.domain.Payslip
 import com.contractops.api.rh.repository.PayslipRepository
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
@@ -16,7 +17,7 @@ class PayslipService(
     private val esocialService: EsocialService,
     private val employeeAssignmentRepository: EmployeeAssignmentRepository,
     private val payrollEsocialOrchestrator: PayrollEsocialOrchestratorService? = null,
-    private val contabilidadeService: ContabilidadeService? = null,
+    @Lazy private val contabilidadeService: ContabilidadeService? = null,
     private val financeiroService: FinanceiroService? = null,
     private val payrollProvisionService: PayrollProvisionService? = null
 ) {
