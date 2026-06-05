@@ -73,5 +73,13 @@ tasks.withType<Test> {
 }
 
 springBoot {
-    mainClass.set("com.contractops.api.ContractOpsApplication")
+    // Kotlin's top-level `main` in ContractOpsApplication.kt compiles to the
+    // class ContractOpsApplicationKt — that's where the static main lives.
+    mainClass.set("com.contractops.api.ContractOpsApplicationKt")
+}
+
+// Only produce the executable bootJar (drop the -plain.jar) so the
+// Dockerfile's `COPY build/libs/*.jar` is unambiguous.
+tasks.named<Jar>("jar") {
+    enabled = false
 }
