@@ -9,6 +9,9 @@ WORKDIR /app
 COPY gradlew gradlew.bat build.gradle.kts settings.gradle.kts ./
 COPY gradle ./gradle
 
+# Ensure gradlew is executable (Git on Windows may lose +x permission)
+RUN chmod +x gradlew
+
 # Download dependencies (cached layer)
 RUN ./gradlew dependencies --no-daemon || true
 
