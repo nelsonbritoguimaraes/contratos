@@ -8,17 +8,21 @@ import org.springframework.context.annotation.Primary
 @Configuration
 class DomainEventConfig {
 
+    // Method names must differ from the component bean names
+    // (kafkaDomainEventPublisher / inMemoryDomainEventPublisher) to avoid a
+    // BeanDefinitionOverrideException. These just expose the chosen publisher
+    // as the @Primary DomainEventPublisher.
     @Bean
     @Primary
     @ConditionalOnProperty(prefix = "contractops.kafka", name = ["enabled"], havingValue = "true")
-    fun kafkaDomainEventPublisher(
+    fun primaryKafkaDomainEventPublisher(
         kafkaPublisher: KafkaDomainEventPublisher
     ): DomainEventPublisher = kafkaPublisher
 
     @Bean
     @Primary
     @ConditionalOnProperty(prefix = "contractops.kafka", name = ["enabled"], havingValue = "false", matchIfMissing = true)
-    fun inMemoryDomainEventPublisher(
+    fun primaryInMemoryDomainEventPublisher(
         publisher: InMemoryDomainEventPublisher
     ): DomainEventPublisher = publisher
 }
