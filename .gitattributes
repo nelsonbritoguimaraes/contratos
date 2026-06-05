@@ -1,0 +1,21 @@
+# Ensure binary files are not corrupted by CRLF conversion
+*.jar binary
+*.war binary
+*.class binary
+*.pfx binary
+*.p12 binary
+*.pem binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary

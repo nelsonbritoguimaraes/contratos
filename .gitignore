@@ -25,6 +25,7 @@ backend/build/
 # Java / Kotlin
 *.class
 *.jar
+!backend/gradle/wrapper/gradle-wrapper.jar
 *.war
 
 # Docker volumes
